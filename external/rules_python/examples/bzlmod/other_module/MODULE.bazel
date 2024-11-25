@@ -1,0 +1,34 @@
+module(
+    name = "other_module",
+)
+
+# This module is using the same version of rules_python
+# that the parent module uses.
+bazel_dep(name = "rules_python", version = "")
+
+# It is not best practice to use a python.toolchian in
+# a submodule.  This code only exists to test that
+# we support doing this. This code is only for rules_python
+# testing purposes.
+PYTHON_NAME_39 = "python_3_9"
+
+PYTHON_NAME_311 = "python_3_11"
+
+python = use_extension("@rules_python//python/extensions:python.bzl", "python")
+python.toolchain(
+    configure_coverage_tool = True,
+    python_version = "3.9",
+)
+python.toolchain(
+    configure_coverage_tool = True,
+    # In a submodule this is ignored
+    is_default = True,
+    python_version = "3.11",
+)
+
+# created by the above python.toolchain calls.
+use_repo(
+    python,
+    PYTHON_NAME_39,
+    PYTHON_NAME_311,
+)
